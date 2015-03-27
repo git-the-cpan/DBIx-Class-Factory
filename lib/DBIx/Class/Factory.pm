@@ -19,24 +19,28 @@ our $VERSION = '0.01_TRIAL';
 
 =head1 SYNOPSIS
 
-{
-    package My::UserFactory;
+Create factory:
 
-    use base qw(DBIx::Class::Factory);
+    {
+        package My::UserFactory;
 
-    __PACKAGE__->resultset(My::Schema->resultset('User'));
-    __PACKAGE__->fields({
-        name => __PACKAGE__->seq(sub {'User #' . shift}),
-        superuser => 0,
-    });
-}
+        use base qw(DBIx::Class::Factory);
 
-# Creates users with 'User #0' .. 'User #3\6' names
-My::UserFactory->create_batch(7, {status => 0});
+        __PACKAGE__->resultset(My::Schema->resultset('User'));
+        __PACKAGE__->fields({
+            name => __PACKAGE__->seq(sub {'User #' . shift}),
+            superuser => 0,
+        });
+    }
+
+Use factory:
+
+    # Creates users with 'User #0' .. 'User #3\6' names
+    My::UserFactory->create_batch(7, {status => 0});
 
 =head1 DESCRIPTION
 
-Creating the big fixtures batch may be a pain. This module provides easy way
+Creating big fixtures batches may be a pain. This module provides easy way
 of creating data in database via L<DBIx::Class>.
 
 To create a factory just derive from L<DBIx::Class::Factory> and add some defaults.
@@ -51,7 +55,7 @@ Tests for this module contains a bunch of usefull examples.
 
 =item base_factory
 
-Use this to create one factory derived from another. Don't user direct inheritance.
+Use this to create one factory derived from another. Don't use direct inheritance.
 
     {
         package My::UserFactory;
