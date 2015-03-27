@@ -1,0 +1,28 @@
+---
+abstract: 'factory-style fixtures for DBIx::Class'
+author:
+  - 'Vadim Pushtaev, C<< <pushtaev at cpan.org> >>'
+build_requires:
+  DBIx::Class: 0
+  ExtUtils::MakeMaker: 6.36
+  SQL::Translator: 0
+  Test::Deep: 0
+  Test::More: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.36
+distribution_type: module
+dynamic_config: 1
+generated_by: 'Module::Install version 1.14'
+license: gpl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+module_name: DBIx::Class::Factory
+name: DBIx-Class-Factory
+no_index:
+  directory:
+    - inc
+    - t
+resources:
+  license: http://opensource.org/licenses/gpl-license.php
+version: 0.01_TRIAL
