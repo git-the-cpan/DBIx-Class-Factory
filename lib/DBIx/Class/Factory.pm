@@ -17,7 +17,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01_0003';
+our $VERSION = '0.01_0004';
 
 =head1 SYNOPSIS
 
@@ -64,7 +64,9 @@ You can also add some data at the moment of creating instance, redefining factor
 
 Tests for this module contains a bunch of usefull examples.
 
-=head1 FACTORY SETTINGS
+=head1 METHODS
+
+=head2 Factory settings
 
 =over
 
@@ -128,9 +130,9 @@ sub fields {
     __PACKAGE__->field($name => $value);
 
 Add field to the factory. C<$name> is directly used in resultset's C<new> method.
-C<$value> must be any value or helper result (see L</HELPERS>).
+C<$value> must be any value or helper result (see L</Helpers>).
 C<CODEREF> as a value will be used as callback. However, you must not rely on this,
-it can be changed in future release — use L</callback> helper instead.
+it can be changed in future releases — use L</callback> helper instead.
 
 =cut
 
@@ -146,7 +148,7 @@ sub field {
 
 Sometimes you want some fields to be in the factory but not in the created object.
 
-You can use `exclude` to exclude them. Both arrayref and scalar are accepted.
+You can use C<exclude> to exclude them. Both arrayref and scalar are accepted.
 
     {
         package My::UserFactory;
@@ -181,7 +183,7 @@ sub exclude {
 
 =back
 
-=head1 HELPERS
+=head2 Helpers
 
 Sometimes you want the value of the field to be not just static value but something special.
 Helpers are here for that.
@@ -190,15 +192,18 @@ Helpers are here for that.
 
 =item B<callback>
 
-Sometimes you want field value to be calculated everytime fields for object are created. Just provide L</callback> as a value in that case.
+Sometimes you want field value to be calculated everytime fields for object are created.
+Just provide C</callback> as a value in that case.
 
 It will be called with the L<DBIx::Class::Factory::Fields> instance as an argument.
 
-    __PACKAGE__->field(status => __PACKAGE__->callback(sub {
-        my ($fields) = @_;
-
-        return $fields->get('superuser') ? 3 : 5;
-    }));
+    __PACKAGE__->fields({
+        status => __PACKAGE__->callback(sub {
+            my ($fields) = @_;
+    
+            return $fields->get('superuser') ? 3 : 5;
+        }),
+    });
 
 =cut
 
@@ -232,7 +237,8 @@ sub seq {
 
 =item B<related_factory>
 
-This helpers just calls another factory's L</get_fields> method. Thanks to C<DBIx::Class> that data will be used to create related object.
+This helper just calls another factory's L</get_fields> method.
+Thanks to C<DBIx::Class>, the returned data will be used to create a related object.
 
     {
         package My::UserFactory;
@@ -241,7 +247,7 @@ This helpers just calls another factory's L</get_fields> method. Thanks to C<DBI
 
         __PACKAGE__->resultset(My::Schema->resultset('User'));
         __PACKAGE__->fields({
-            # create city if it's not specified
+            # create a new city if it's not specified
             city => __PACKAGE__->related_factory('My::CityFactory'),
         });
     }
@@ -277,7 +283,7 @@ sub related_factory_batch {
 
 =back
 
-=head1 FACTORY METHODS
+=head2 Factory actions
 
 =over
 
@@ -368,7 +374,7 @@ sub create_batch {
 
 =back
 
-=head1 HOOKS
+=head2 Hooks
 
 You can define the following methods in your factory to be executed after corresponding methods.
 
@@ -433,10 +439,10 @@ sub _class_data {
 
     no strict 'refs';
 
-    my $var_name = $class . '::class_data';
+    my $var_name = $class . '::_dbix_class_factory_data';
 
     unless (defined ${$var_name}) {
-        ${$var_name} = {fields => {}}
+        ${$var_name} = {fields => {}};
     }
 
     return ${$var_name};

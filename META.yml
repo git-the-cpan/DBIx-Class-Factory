@@ -23,6 +23,9 @@ no_index:
   directory:
     - inc
     - t
+requires:
+  strict: 0
+  warnings: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01_0003
+version: 0.01_0004
