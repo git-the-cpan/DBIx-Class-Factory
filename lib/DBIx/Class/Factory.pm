@@ -9,15 +9,15 @@ use DBIx::Class::Factory::Fields;
 
 =head1 NAME
 
-DBIx::Class::Factory — factory-style fixtures for DBIx::Class
+DBIx::Class::Factory - factory-style fixtures for DBIx::Class
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01_0004';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -40,7 +40,7 @@ Create factory:
 
         use base qw(DBIx::Class::Factory);
 
-        __PACKAGE__->base_factory('My::UserFactory'));
+        __PACKAGE__->base_factory('My::UserFactory');
         __PACKAGE__->field(superuser => 1);
     }
 
@@ -193,7 +193,7 @@ Helpers are here for that.
 =item B<callback>
 
 Sometimes you want field value to be calculated everytime fields for object are created.
-Just provide C</callback> as a value in that case.
+Just provide C<callback> as a value in that case.
 
 It will be called with the L<DBIx::Class::Factory::Fields> instance as an argument.
 
