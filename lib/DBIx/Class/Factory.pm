@@ -13,36 +13,30 @@ DBIx::Class::Factory - factory-style fixtures for DBIx::Class
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.02_0001';
 
 =head1 SYNOPSIS
 
 Create factory:
 
-    {
-        package My::UserFactory;
+    package My::UserFactory;
+    use base qw(DBIx::Class::Factory);
 
-        use base qw(DBIx::Class::Factory);
+    __PACKAGE__->resultset(My::Schema->resultset('User'));
+    __PACKAGE__->fields({
+        name => __PACKAGE__->seq(sub {'User #' . shift}),
+        status => 'new',
+    });
 
-        __PACKAGE__->resultset(My::Schema->resultset('User'));
-        __PACKAGE__->fields({
-            name => __PACKAGE__->seq(sub {'User #' . shift}),
-            status => 'new',
-        });
-    }
+    package My::SuperUserFactory;
+    use base qw(DBIx::Class::Factory);
 
-    {
-        package My::SuperUserFactory;
-
-        use base qw(DBIx::Class::Factory);
-
-        __PACKAGE__->base_factory('My::UserFactory');
-        __PACKAGE__->field(superuser => 1);
-    }
+    __PACKAGE__->base_factory('My::UserFactory');
+    __PACKAGE__->field(superuser => 1);
 
 Use factory:
 
@@ -240,17 +234,15 @@ sub seq {
 This helper just calls another factory's L</get_fields> method.
 Thanks to C<DBIx::Class>, the returned data will be used to create a related object.
 
-    {
-        package My::UserFactory;
+    package My::UserFactory;
 
-        use base qw(DBIx::Class::Factory);
+    use base qw(DBIx::Class::Factory);
 
-        __PACKAGE__->resultset(My::Schema->resultset('User'));
-        __PACKAGE__->fields({
-            # create a new city if it's not specified
-            city => __PACKAGE__->related_factory('My::CityFactory'),
-        });
-    }
+    __PACKAGE__->resultset(My::Schema->resultset('User'));
+    __PACKAGE__->fields({
+        # create a new city if it's not specified
+        city => __PACKAGE__->related_factory('My::CityFactory'),
+    });
 
 =cut
 
@@ -328,12 +320,24 @@ sub build {
 
 Creates L<DBIx::Class::Row> object and saves it to a database.
 
+You can also provide the second argument, hashref of options.
+The only option is 'discard_changes', a boolean value which default is true.
+It says whether L<DBIx::Class::Row/discard_changes> should be called on the created object.
+
+    My::UserFactory->create(undef, {discard_changes => 0}); 
+
 =cut
 
 sub create {
-    my ($class, $extra_fields) = @_;
+    my ($class, $extra_fields, $options) = @_;
 
-    return $class->after_create($class->build($extra_fields)->insert());
+    $options = {} unless defined $options;
+    $options->{discard_changes} = 1 unless exists $options->{discard_changes};
+
+    my $row = $class->build($extra_fields)->insert();
+    $row->discard_changes if $options->{discard_changes};
+
+    return $class->after_create($row);
 }
 
 =item B<get_fields_batch>
