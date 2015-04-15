@@ -17,7 +17,7 @@ Version 0.03
 
 =cut
 
-our $VERSION = '0.02_0001';
+our $VERSION = '0.03';
 
 =head1 SYNOPSIS
 
@@ -321,7 +321,7 @@ sub build {
 Creates L<DBIx::Class::Row> object and saves it to a database.
 
 You can also provide the second argument, hashref of options.
-The only option is 'discard_changes', a boolean value which default is true.
+The only option is C<discard_changes>, a boolean value which default is true.
 It says whether L<DBIx::Class::Row/discard_changes> should be called on the created object.
 
     My::UserFactory->create(undef, {discard_changes => 0}); 
