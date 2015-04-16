@@ -28,4 +28,5 @@ requires:
   warnings: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: '0.03'
+  repository: https://github.com/VadimPushtaev/dbix-class-factory
+version: '0.04'
